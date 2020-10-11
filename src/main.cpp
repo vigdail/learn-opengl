@@ -27,37 +27,20 @@ const char *fragmentShaderSource =
     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\0";
 
-unsigned int createTrianlges()
+unsigned int createTrianlge(float v[8])
 {
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float verticies[] = {
-
-        0.5f, 0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f, // bottom right
-        -0.5f, 0.5f, 0.0f, // top left
-
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f,  // top left
-    };
-
-    // unsigned int indices[] = {
-    //     0, 1, 3, // the first triangle
-    //     1, 2, 3, // the second one
-    // };
 
     unsigned int VBO;
-    // unsigned int EBO;
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
+    std::cout << sizeof(v) << std::endl;
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(v) * 9, v, GL_STATIC_DRAW);
 
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -165,7 +148,18 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    unsigned int triangles_vao = createTrianlges();
+    float v1[] = {
+        0.5f, 0.5f, 0.0f,  // top right
+        0.5f, -0.5f, 0.0f, // bottom right
+        -0.5f, 0.5f, 0.0f, // top left
+    };
+    unsigned int t1_vao = createTrianlge(v1);
+    float v2[] = {
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f,  // top left
+    };
+    unsigned int t2_vao = createTrianlge(v2);
 
     // render loop
     // -----------
@@ -181,8 +175,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(triangles_vao);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(t1_vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(t2_vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
