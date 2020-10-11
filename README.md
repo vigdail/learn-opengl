@@ -10,6 +10,9 @@ Make sure you have ```opengl version>=3.3``` and ```glfw``` installed on you sys
 ## Build
 ### Linux
 ```git clone https://github.com/vigdail/learn-opengl```
+
 ```cd learn-opengl```
+
 ```mkdir build```
+
 ```cmake ../ && make```
