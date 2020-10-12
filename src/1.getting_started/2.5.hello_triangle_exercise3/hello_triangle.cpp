@@ -35,7 +35,7 @@ const char *yellowfragmentShaderSource =
     "   FragColor = vec4(1.0f, 1.0f, 0.2f, 1.0f);\n"
     "}\0";
 
-unsigned int createTrianlge(float v[8])
+unsigned int createTrianlge(float v[], size_t count)
 {
 
     unsigned int VBO;
@@ -45,10 +45,8 @@ unsigned int createTrianlge(float v[8])
 
     glBindVertexArray(VAO);
 
-    std::cout << sizeof(v) << std::endl;
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(v) * 9, v, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * count, v, GL_STATIC_DRAW);
 
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -195,13 +193,13 @@ int main()
         0.5f, -0.5f, 0.0f, // bottom right
         -0.5f, 0.5f, 0.0f, // top left
     };
-    unsigned int t1_vao = createTrianlge(v1);
+    unsigned int t1_vao = createTrianlge(v1, sizeof(v1) / sizeof(float));
     float v2[] = {
         0.5f, -0.5f, 0.0f,  // bottom right
         -0.5f, -0.5f, 0.0f, // bottom left
         -0.5f, 0.5f, 0.0f,  // top left
     };
-    unsigned int t2_vao = createTrianlge(v2);
+    unsigned int t2_vao = createTrianlge(v2, sizeof(v2) / sizeof(float));
 
     // render loop
     // -----------
