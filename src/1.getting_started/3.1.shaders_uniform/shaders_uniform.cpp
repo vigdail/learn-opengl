@@ -21,7 +21,7 @@ const char *vertexShaderSource =
     "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
     "}\0";
 
-const char *orangefragmentShaderSource =
+const char *fragmentShaderSource =
     "#version 330 core\n"
     "uniform vec4 u_Color;\n"
     "out vec4 FragColor;\n"
@@ -123,7 +123,7 @@ int main()
     // ---------------
     unsigned int orangeFragmentShader;
     orangeFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(orangeFragmentShader, 1, &orangefragmentShaderSource, NULL);
+    glShaderSource(orangeFragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(orangeFragmentShader);
 
     glGetShaderiv(orangeFragmentShader, GL_COMPILE_STATUS, &success);
