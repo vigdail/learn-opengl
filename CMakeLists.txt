@@ -44,7 +44,7 @@ set(1.getting_started
     2.5.hello_triangle_exercise3
     3.1.shaders_uniform
     3.2.shaders_interpolation
-    # 3.3.shaders_class
+    3.3.shaders_class
     # 4.1.textures
     # 4.2.textures_combined
     # 4.4.textures_exercise2
@@ -136,8 +136,6 @@ set(7.in_practice
     #3.2d_game
 )
 
-
-
 # configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 # include_directories(${CMAKE_BINARY_DIR}/configuration)
 
@@ -146,12 +144,18 @@ set(7.in_practice
 # set(LIBS ${LIBS} STB_IMAGE)
 
 add_library(GLAD "lib/src/glad.c")
-target_include_directories(GLAD PRIVATE "lib/include")
-set(LIBS ${LIBS} GLAD)
+target_include_directories(GLAD PRIVATE "lib/include/")
+set(LIBS ${LIBS}  GLAD)
 
 macro(makeLink src dest target)
   add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink ${src} ${dest}  DEPENDS  ${dest} COMMENT "mklink ${src} -> ${dest}")
 endmacro()
+
+# core lib
+file(GLOB CORE_SRC "lib/core/*.cpp")
+add_library(CORE ${CORE_SRC})
+target_include_directories(CORE PRIVATE "lib/include/")
+target_link_libraries(CORE ${LIBS})
 
 # then create a project file per tutorial
 foreach(CHAPTER ${CHAPTERS})
@@ -165,25 +169,20 @@ foreach(CHAPTER ${CHAPTERS})
         )
         set(NAME "${CHAPTER}__${DEMO}")
         add_executable(${NAME} ${SOURCE})
-        target_include_directories(${NAME} PRIVATE "lib/include")
-        target_link_libraries(${NAME} ${LIBS})
+        target_include_directories(${NAME} PRIVATE "lib/include/" PRIVATE "lib/")
+        target_link_libraries(${NAME} CORE ${LIBS})
  
         set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
        
         # copy shader files to build directory
         file(GLOB SHADERS
             "src/${CHAPTER}/${DEMO}/*.vs"
-            # "src/${CHAPTER}/${DEMO}/*.frag"
             "src/${CHAPTER}/${DEMO}/*.fs"
             "src/${CHAPTER}/${DEMO}/*.gs"
         )
         foreach(SHADER ${SHADERS})
             file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${CHAPTER})
         endforeach(SHADER)
-        # if compiling for visual studio, also use configure file for each project (specifically to set up working directory)
-        if(MSVC)
-            configure_file(${CMAKE_SOURCE_DIR}/configuration/visualstudio.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.vcxproj.user @ONLY)
-        endif(MSVC)
     endforeach(DEMO)
 endforeach(CHAPTER)
 
