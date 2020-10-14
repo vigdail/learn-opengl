@@ -142,12 +142,13 @@ set(7.in_practice
 # include_directories(${CMAKE_BINARY_DIR}/configuration)
 
 # first create relevant static libraries requried for other projects
-# add_library(STB_IMAGE "src/stb_image.cpp")
-# set(LIBS ${LIBS} STB_IMAGE)
+add_library(stb_image "lib/src/stb_image.cpp")
+target_include_directories(stb_image PRIVATE "lib/include/")
+set(LIBS ${LIBS} stb_image)
 
-add_library(GLAD "lib/src/glad.c")
-target_include_directories(GLAD PRIVATE "lib/include/")
-set(LIBS ${LIBS}  GLAD)
+add_library(glad "lib/src/glad.c")
+target_include_directories(glad PRIVATE "lib/include/")
+set(LIBS ${LIBS} glad)
 
 macro(makeLink src dest target)
   add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink ${src} ${dest}  DEPENDS  ${dest} COMMENT "mklink ${src} -> ${dest}")
@@ -155,9 +156,9 @@ endmacro()
 
 # core lib
 file(GLOB CORE_SRC "lib/core/*.cpp")
-add_library(CORE ${CORE_SRC})
-target_include_directories(CORE PRIVATE "lib/include/")
-target_link_libraries(CORE ${LIBS})
+add_library(core ${CORE_SRC})
+target_include_directories(core PRIVATE "lib/include/")
+target_link_libraries(core ${LIBS})
 
 # then create a project file per tutorial
 foreach(CHAPTER ${CHAPTERS})
@@ -172,7 +173,7 @@ foreach(CHAPTER ${CHAPTERS})
         set(NAME "${CHAPTER}__${DEMO}")
         add_executable(${NAME} ${SOURCE})
         target_include_directories(${NAME} PRIVATE "lib/include/" PRIVATE "lib/")
-        target_link_libraries(${NAME} CORE ${LIBS})
+        target_link_libraries(${NAME} core ${LIBS})
  
         set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
        
