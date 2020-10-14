@@ -103,6 +103,7 @@ int main()
 
         // glUseProgram(oShaderProgram);
         shader.use();
+        shader.setFloat("uColor", 0.6);
         glBindVertexArray(t1_vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(t2_vao);

@@ -2,6 +2,8 @@
 
 out vec4 glColor;
 
+uniform float uColor;
+
 void main() {
-   glColor = vec4(0.6, 0.4, 0.3, 1.0);
+   glColor = vec4(uColor, uColor, uColor, 1.0);
 }
