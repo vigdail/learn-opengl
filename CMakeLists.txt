@@ -49,9 +49,10 @@ set(1.getting_started
     3.6.shaders_exercise3
     4.1.textures
     4.2.textures_combined
-    # 4.4.textures_exercise2
-    # 4.5.textures_exercise3
-    # 4.6.textures_exercise4
+    4.3.textures_exercise1
+    4.4.textures_exercise2
+    4.5.textures_exercise3
+    4.6.textures_exercise4
     # 5.1.transformations
     # 5.2.transformations_exercise2
     # 6.1.coordinate_systems
