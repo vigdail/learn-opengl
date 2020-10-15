@@ -5,7 +5,7 @@ Also there is an [official repo](https://github.com/JoeyDeVries/LearnOpenGL) mad
 
 ## Dependencies
 
-Make sure you have ```opengl version>=3.3``` and ```glfw``` installed on you system.
+Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed on you system.
 
 ## Build
 ### Linux
