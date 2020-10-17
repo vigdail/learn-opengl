@@ -207,7 +207,6 @@ int main()
         cubeShader.use();
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.3f, 1.0f, 0.5f));
         model = glm::translate(model, cubePosition);
         cubeShader.setMatrix4("u_model", model);
         cubeShader.setVec3("lightPosition", lightPosition);
