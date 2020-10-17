@@ -13,5 +13,5 @@ out vec3 fragPos;
 void main() {
     fragPos = vec3(u_model * vec4(aPos, 1.0));
     gl_Position = u_proj * u_view * vec4(fragPos, 1.0);
-    Normal = vec3(u_model * vec4(aNormal, 1.0));
+    Normal = aNormal;
 }
