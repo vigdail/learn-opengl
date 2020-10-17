@@ -61,12 +61,6 @@ namespace core
             pitch = -89.0f;
         }
 
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        direction.y = sin(glm::radians(pitch));
-        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front = glm::normalize(direction);
-
         updateVectors();
     }
 
@@ -90,7 +84,7 @@ namespace core
         _front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
         _front.y = sin(glm::radians(pitch));
         _front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front = glm::normalize(front);
+        front = glm::normalize(_front);
 
         right = glm::cross(front, worldUp);
         up = glm::normalize(glm::cross(right, front));
