@@ -67,6 +67,7 @@ set(1.getting_started
     7.3.camera_mouse_zoom
     7.4.camera_class
     7.5.camera_exercise1
+    7.6.camera_exercise2
 )
 
 set(2.lighting
