@@ -210,9 +210,22 @@ int main()
         model = glm::translate(model, cubePosition);
         cubeShader.setMatrix4("u_model", model);
         cubeShader.setVec3("cameraPosition", camera.position);
-        cubeShader.setVec3("lightPosition", lightPosition);
-        cubeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        cubeShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        cubeShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        cubeShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        cubeShader.setFloat("material.shininess", 32.0f);
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+        cubeShader.setVec3("light.position", lightPosition);
+        cubeShader.setVec3("light.ambient", ambientColor);
+        cubeShader.setVec3("light.diffuse", diffuseColor);
+        cubeShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
         glm::mat4 view;
         view = camera.getViewMatrix();
