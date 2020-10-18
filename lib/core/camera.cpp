@@ -86,7 +86,7 @@ namespace core
         _front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         front = glm::normalize(_front);
 
-        right = glm::cross(front, worldUp);
+        right = glm::normalize(glm::cross(front, worldUp));
         up = glm::normalize(glm::cross(right, front));
     }
 
