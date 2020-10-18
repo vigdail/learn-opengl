@@ -185,7 +185,7 @@ foreach(CHAPTER ${CHAPTERS})
         target_include_directories(${NAME} PRIVATE "lib/include/" PRIVATE "lib/")
         target_link_libraries(${NAME} core ${LIBS})
  
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}/${DEMO}")
        
         # copy shader files to build directory
         file(GLOB SHADERS
@@ -194,7 +194,7 @@ foreach(CHAPTER ${CHAPTERS})
             "src/${CHAPTER}/${DEMO}/*.gs"
         )
         foreach(SHADER ${SHADERS})
-            file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${CHAPTER})
+            file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${CHAPTER}/${DEMO})
         endforeach(SHADER)
     endforeach(DEMO)
 endforeach(CHAPTER)

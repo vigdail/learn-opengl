@@ -109,7 +109,7 @@ int main()
 
     int width,
         height, nChannels;
-    unsigned char *image = stbi_load("../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
+    unsigned char *image = stbi_load("../../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
 
     if (image)
     {

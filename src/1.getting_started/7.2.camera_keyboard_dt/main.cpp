@@ -152,7 +152,7 @@ int main()
 
     int width,
         height, nChannels;
-    unsigned char *image1 = stbi_load("../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
+    unsigned char *image1 = stbi_load("../../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
 
     if (image1)
     {
@@ -175,7 +175,7 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned char *image2 = stbi_load("../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
+    unsigned char *image2 = stbi_load("../../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
 
     if (image2)
     {

@@ -144,7 +144,7 @@ int main()
 
     int width,
         height, nChannels;
-    unsigned char *image1 = stbi_load("../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
+    unsigned char *image1 = stbi_load("../../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
 
     if (image1)
     {
@@ -167,7 +167,7 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned char *image2 = stbi_load("../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
+    unsigned char *image2 = stbi_load("../../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
 
     if (image2)
     {
@@ -189,12 +189,6 @@ int main()
     shader.setInt("u_texture1", 0);
     shader.setInt("u_texture2", 1);
     glBindVertexArray(t1_vao);
-
-    // MVP
-    // ---------------
-    // glm::mat4 model = glm::mat4(1.0f);
-    // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
-    // shader.setMatrix4("u_model", model);
 
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));

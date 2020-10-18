@@ -111,7 +111,7 @@ int main()
 
     int width,
         height, nChannels;
-    unsigned char *image1 = stbi_load("../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
+    unsigned char *image1 = stbi_load("../../../resources/textures/container.jpg", &width, &height, &nChannels, 0);
 
     if (image1)
     {
@@ -136,7 +136,7 @@ int main()
 
     // int width,
     //     height, nChannels;
-    unsigned char *image2 = stbi_load("../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
+    unsigned char *image2 = stbi_load("../../../resources/textures/awesomeface.png", &width, &height, &nChannels, 0);
 
     if (image2)
     {
