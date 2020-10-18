@@ -29,7 +29,7 @@ bool firstMouse = true;
 unsigned int createCubeVBO()
 {
     float vertices[] = {
-        // positions          // normals           // texture coords
+        // positions          // normals        // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
         0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
@@ -206,6 +206,29 @@ int main()
 
     stbi_image_free(image);
 
+    unsigned int specularMap;
+    glGenTextures(1, &specularMap);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    unsigned char *specularImage = stbi_load("../../../resources/textures/container2_specular.png", &width, &height, &nChannels, 0);
+
+    if (specularImage)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, specularImage);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+
+    stbi_image_free(specularImage);
+
     Shader cubeShader("cube_shader.vs", "cube_shader.fs");
     Shader lightShader("light_shader.vs", "light_shader.fs");
     unsigned int vbo = createCubeVBO();
@@ -240,11 +263,14 @@ int main()
         cubeShader.setMatrix4("u_model", model);
         cubeShader.setVec3("cameraPosition", camera.position);
         cubeShader.setInt("material.diffuse", 0);
-        cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        cubeShader.setInt("material.specular", 1);
         cubeShader.setFloat("material.shininess", 32.0f);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         glm::vec3 lightColor(1.0f);
         glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
