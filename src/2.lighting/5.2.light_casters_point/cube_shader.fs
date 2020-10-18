@@ -30,7 +30,7 @@ uniform Light light;
 
 void main() {
    float distance = length(light.position-fragPos);
-   float attanuation = 1.0 / (light.constant + distance * light.linear + distance * distance * light.quadratic);
+   float attenuation = 1.0 / (light.constant + distance * light.linear + distance * distance * light.quadratic);
 
    vec3 ambient = light.ambient * texture(material.diffuse, uv).rgb;
 
@@ -44,6 +44,6 @@ void main() {
    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
    vec3 specular = light.specular * (spec * texture(material.specular, uv).rgb);
 
-   vec3 result = (ambient + diffuse + specular) * attanuation;
+   vec3 result = (ambient + diffuse + specular) * attenuation;
    fragColor = vec4(result, 1.0);
 }
