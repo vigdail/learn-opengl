@@ -16,3 +16,10 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 ```mkdir build```
 
 ```cmake ../ && make```
+
+## TODO
+
+These tutorials/exercises have been skipped for now:
+
+- [ ] 2.Lighting
+    - [ ] 6.multiple_lights_exersise1
