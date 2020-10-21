@@ -16,12 +16,12 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 }
 
-void Mesh::draw(Shader shader)
+void Mesh::draw(Shader &shader)
 {
     unsigned int diffuseN = 1;
     unsigned int specularN = 1;
 
-    for (unsigned int i = 0; textures.size(); i++)
+    for (unsigned int i = 0; i < textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
         std::string number;

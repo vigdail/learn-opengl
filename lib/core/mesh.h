@@ -18,6 +18,7 @@ struct Texture
 {
     unsigned int id;
     std::string type;
+    std::string path;
 };
 
 class Mesh
@@ -28,7 +29,7 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void draw(Shader shader);
+    void draw(Shader &shader);
 
 private:
     unsigned int VBO, VAO, EBO;
