@@ -82,6 +82,8 @@ int main()
 
     Model model("../../../resources/backpack/backpack.obj");
 
+    glm::vec3 lightPosition = glm::vec3(1.0f, 1.5f, 3.0f);
+
     lastTime = glfwGetTime();
 
     // render loop
@@ -101,6 +103,15 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
+
+        shader.setVec3("cameraPosition", camera.position);
+        shader.setVec3("light.position", lightPosition);
+        shader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
+        shader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+        shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        shader.setFloat("light.constant", 1.0f);
+        shader.setFloat("light.linear", 0.09);
+        shader.setFloat("light.quadratic", 0.032);
 
         glm::mat4 modelMatrix;
         glm::mat4 view;
