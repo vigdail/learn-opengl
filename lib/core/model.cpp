@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "core.h"
 #include "model.h"
 
 unsigned int textureFromFile(const std::string filename, const std::string directory);
@@ -128,7 +129,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *material, aiTexture
         if (!skip)
         { // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = textureFromFile(str.C_Str(), this->directory);
+            texture.id = loadTexture(this->directory + '/' + str.C_Str());
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
@@ -136,51 +137,4 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *material, aiTexture
         }
     }
     return textures;
-}
-
-unsigned int textureFromFile(const std::string filename, const std::string directory)
-{
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nChannels;
-
-    std::string path = directory + "/" + filename;
-
-    stbi_set_flip_vertically_on_load(1);
-
-    unsigned char *image = stbi_load(path.c_str(), &width, &height, &nChannels, 0);
-
-    if (image)
-    {
-        GLenum format;
-        if (nChannels == 1)
-        {
-            format = GL_RED;
-        }
-        else if (nChannels == 3)
-        {
-            format = GL_RGB;
-        }
-        else if (nChannels == 4)
-        {
-            format = GL_RGBA;
-        }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cerr << "Failed to load texture: " << path << std::endl;
-    }
-
-    stbi_image_free(image);
-
-    return texture;
 }
