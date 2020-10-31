@@ -25,6 +25,7 @@ unsigned int loadTexture(const std::string path)
     if (image)
     {
         GLenum format;
+        GLenum texFormat = GL_RGB;
         if (nChannels == 1)
         {
             format = GL_RED;
@@ -36,8 +37,9 @@ unsigned int loadTexture(const std::string path)
         else if (nChannels == 4)
         {
             format = GL_RGBA;
+            texFormat = GL_RGBA;
         }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+        glTexImage2D(GL_TEXTURE_2D, 0, texFormat, width, height, 0, format, GL_UNSIGNED_BYTE, image);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
