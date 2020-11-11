@@ -208,8 +208,6 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glEnable(GL_CULL_FACE);
-
     unsigned int marbleTexture = loadTexture("../../../resources/textures/marble.jpg");
     unsigned int metalTexture = loadTexture("../../../resources/textures/metal.png");
     unsigned int windowTexture = loadTexture("../../../resources/textures/blending_transparent_window.png");
@@ -266,6 +264,8 @@ int main()
         // -----
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glEnable(GL_CULL_FACE);
 
         cubeShader.use();
 
@@ -337,6 +337,8 @@ int main()
             float distance = glm::length(camera.position - windows[i]);
             sorted[distance] = windows[i];
         }
+
+        glDisable(GL_CULL_FACE);
 
         glBindVertexArray(windowVAO);
         for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
