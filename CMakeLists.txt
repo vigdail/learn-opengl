@@ -104,7 +104,7 @@ set(4.advanced_opengl
     3.1.blending_discard
     3.2.blending_sort
     4.face_culling
-    # 4.face_culling_exercise1
+    4.face_culling_exercise1
     # 5.1.framebuffers
     # 5.2.framebuffers_exercise1
     # 6.1.cubemaps_skybox
