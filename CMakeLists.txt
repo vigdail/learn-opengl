@@ -107,7 +107,7 @@ set(4.advanced_opengl
     4.face_culling_exercise1
     5.1.framebuffers
     5.1.postprocessing
-    # 5.2.framebuffers_exercise1
+    5.2.framebuffers_exercise1
     # 6.1.cubemaps_skybox
     # 6.2.cubemaps_environment_mapping
     # 8.advanced_glsl_ubo

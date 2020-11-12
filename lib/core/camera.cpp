@@ -52,13 +52,16 @@ namespace core
         yaw += dx;
         pitch += dy;
 
-        if (pitch > 89.0f)
+        if (contrainPitch)
         {
-            pitch = 89.0f;
-        }
-        if (pitch < -89.0f)
-        {
-            pitch = -89.0f;
+            if (pitch > 89.0f)
+            {
+                pitch = 89.0f;
+            }
+            if (pitch < -89.0f)
+            {
+                pitch = -89.0f;
+            }
         }
 
         updateVectors();
