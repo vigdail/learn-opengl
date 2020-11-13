@@ -308,15 +308,12 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    Shader cubeShader("cube_shader.vs", "cube_shader.fs");
+    Shader reflectionShader("cube_shader.vs", "reflection_shader.fs");
+    Shader refractionShader("cube_shader.vs", "refraction_shader.fs");
     Shader screenShader("screen_shader.vs", "screen_shader.fs");
     Shader skyboxShader("skybox_shader.vs", "skybox_shader.fs");
-    unsigned int cubeVBO = createCubeVBO();
-    unsigned int planeVBO = createPlaneVBO();
     unsigned int quadVBO = createQuadVBO();
     unsigned int skyboxVBO = createSkyboxVBO();
-    unsigned int cubeVAO = createMesh(cubeVBO);
-    unsigned int planeVAO = createMesh(planeVBO);
     unsigned int quadVAO = createQuad(quadVBO);
     unsigned int skyboxVAO = createSkybox(skyboxVBO);
 
@@ -392,18 +389,33 @@ int main()
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(camera.fov), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
-        // draw backpack
-        cubeShader.use();
-        cubeShader.setInt("skybox", 0);
+        // draw reflection backpack
+        reflectionShader.use();
+        reflectionShader.setInt("skybox", 0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        cubeShader.setVec3("u_camera", camera.position);
-        cubeShader.setMatrix4("u_model", model);
-        cubeShader.setMatrix4("u_view", view);
-        cubeShader.setMatrix4("u_proj", projection);
+        reflectionShader.setVec3("u_camera", camera.position);
+        reflectionShader.setMatrix4("u_model", model);
+        reflectionShader.setMatrix4("u_view", view);
+        reflectionShader.setMatrix4("u_proj", projection);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
-        backpack.draw(cubeShader);
+        backpack.draw(reflectionShader);
+
+        // draw refraction backpack
+        model = glm::mat4(1.0);
+        model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f));
+        refractionShader.use();
+        refractionShader.setInt("skybox", 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        refractionShader.setVec3("u_camera", camera.position);
+        refractionShader.setMatrix4("u_model", model);
+        refractionShader.setMatrix4("u_view", view);
+        refractionShader.setMatrix4("u_proj", projection);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        backpack.draw(refractionShader);
 
         // draw skybox
         glDepthFunc(GL_LEQUAL);
