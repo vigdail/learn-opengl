@@ -108,7 +108,7 @@ set(4.advanced_opengl
     5.1.framebuffers
     5.1.postprocessing
     5.2.framebuffers_exercise1
-    # 6.1.cubemaps_skybox
+    6.1.cubemaps_skybox
     # 6.2.cubemaps_environment_mapping
     # 8.advanced_glsl_ubo
     # 9.1.geometry_shader_houses
