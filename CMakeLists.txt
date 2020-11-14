@@ -112,7 +112,7 @@ set(4.advanced_opengl
     6.2.cubemaps_environment_mapping
     8.advanced_glsl_ubo
     9.1.geometry_shader_houses
-    # 9.2.geometry_shader_exploding
+    9.2.geometry_shader_exploding
     # 9.3.geometry_shader_normals
     # 10.1.instancing_quads
     # 10.2.asteroids
