@@ -94,32 +94,13 @@ unsigned int createPlaneVBO()
 {
     float vertices[] = {
         // positions
-        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 3.0f, 0.0f,
-        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 3.0f,
+        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 5.0f, 0.0f,
+        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 5.0f,
         -10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
 
-        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 3.0f, 0.0f,
-        10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 3.0f, 3.0f,
-        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 3.0f};
-
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    return VBO;
-}
-
-unsigned int createQuadVBO()
-{
-    float vertices[] = {
-        // positions
-        1.0f, -1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 1.0f, 0.0f};
+        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 5.0f, 0.0f,
+        10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 5.0f, 5.0f,
+        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 5.0f};
 
     unsigned int VBO;
     glGenBuffers(1, &VBO);
@@ -152,26 +133,6 @@ createMesh(unsigned int VBO)
 
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
-
-    return VAO;
-}
-
-unsigned int
-createQuad(unsigned int VBO)
-{
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)(2 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
     glBindVertexArray(0);
 
     return VAO;
@@ -232,14 +193,12 @@ int main()
 
     unsigned int floorTexture = loadSTexture("../../../resources/textures/wood.png");
 
-    Shader shader("shader.vs", "shader.fs");
+    Shader shader("blinn_phong.vs", "blinn_phong.fs");
     Shader depthMapShader("depthmap.vs", "depthmap.fs");
     unsigned int planeVBO = createPlaneVBO();
     unsigned int cubeVBO = createCubeVBO();
-    unsigned int quadVBO = createQuadVBO();
     unsigned int planeVAO = createMesh(planeVBO);
     unsigned int cubeVAO = createMesh(cubeVBO);
-    unsigned int quadVAO = createQuad(quadVBO);
 
     glm::vec3 lightPosition = glm::vec3(-2.0f, 4.0f, -1.0f);
 
@@ -299,7 +258,6 @@ int main()
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glClear(GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
         float nearPlane = 0.1f;
         float farPlane = 7.5f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
@@ -328,16 +286,40 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // second pass
-        glDisable(GL_DEPTH_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        model = glm::mat4(1.0f);
+        view = camera.getViewMatrix();
+
         shader.use();
+        shader.setInt("u_texture", 0);
+        shader.setInt("u_shadowMap", 1);
+        shader.setVec3("lightPosition", lightPosition);
+        shader.setMatrix4("u_lightSpaceMatrix", ligthSpaceMatrix);
+        shader.setVec3("viewPos", camera.position);
+        shader.setMatrix4("u_view", view);
+        shader.setMatrix4("u_proj", projection);
         glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, depthMap);
 
-        glBindVertexArray(quadVAO);
+        glBindVertexArray(cubeVAO);
+        for (unsigned int i = 0; i < 3; i++)
+        {
+            model = glm::mat4(1.0);
+            model = glm::translate(model, cubePositions[i]);
+            shader.setMatrix4("u_model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        model = glm::mat4(1.0);
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        shader.setMatrix4("u_model", model);
+        glBindVertexArray(planeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
