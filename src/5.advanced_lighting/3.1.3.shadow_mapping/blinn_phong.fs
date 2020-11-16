@@ -22,8 +22,9 @@ float calculateShadow(vec4 fragPosLightSpace) {
         return 0.0;
     }
     float currentDepth = projCoords.z;
-    vec3 lightDir = normalize(lightPosition - fs_in.fragPos);
-    float bias = max(0.05 * (1.0 - dot(fs_in.normal, lightDir)), 0.005);
+    vec3 normal = normalize(fs_in.normal);
+    vec3 lightDir = normalize(lightPosition);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 
     vec2 texelSize = 1.0 / textureSize(u_shadowMap, 0);
     float shadow = 0.0;
@@ -40,7 +41,7 @@ float calculateShadow(vec4 fragPosLightSpace) {
 vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
 {
     // diffuse
-    vec3 lightDir = normalize(lightPos - fragPos);
+    vec3 lightDir = normalize(lightPos); 
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * lightColor;
     // specular
