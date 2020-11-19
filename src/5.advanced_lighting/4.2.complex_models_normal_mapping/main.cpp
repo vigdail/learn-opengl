@@ -1,14 +1,17 @@
 #include <iostream>
+#include <vector>
+#include <map>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <stb_image.h>
 
 #include <core/shader.h>
-#include <core/camera.h>
 #include <core/model.h>
+#include <core/camera.h>
+#include <core/core.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double x, double y);
@@ -22,10 +25,14 @@ const unsigned int WIN_HEIGHT = 600;
 float deltaTime = 0.0f;
 float lastTime = 0.0f;
 
-core::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+core::Camera camera(glm::vec3(0.0f, 0.5f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 float mouseLastX = WIN_WIDTH / 2.0f;
 float mouseLastY = WIN_HEIGHT / 2.0f;
 bool firstMouse = true;
+
+bool KEY_B_PRESSED = false;
+
+glm::vec3 lightPosition;
 
 int main()
 {
@@ -77,14 +84,16 @@ int main()
     }
 
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
-    Shader shader("model.vs", "model.fs");
-    stbi_set_flip_vertically_on_load(1);
-    Model model("../../../resources/backpack/backpack.obj");
+    Shader shader("blinn_phong.vs", "blinn_phong.fs");
+    Model cyborg("../../../resources/models/cyborg/cyborg.obj");
 
-    glm::vec3 lightPosition = glm::vec3(1.0f, 1.5f, 3.0f);
+    glm::mat4 view;
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(camera.fov), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
-    lastTime = glfwGetTime();
+    lightPosition = glm::vec3(0.0f, 1.0f, 0.0f);
 
     // render loop
     // -----------
@@ -99,36 +108,26 @@ int main()
 
         // render
         // -----
+        // second pass
+        glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.use();
-
-        shader.setVec3("cameraPosition", camera.position);
-        shader.setVec3("light.position", lightPosition);
-        shader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
-        shader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
-        shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        shader.setFloat("light.constant", 1.0f);
-        shader.setFloat("light.linear", 0.09);
-        shader.setFloat("light.quadratic", 0.032);
-
-        glm::mat4 modelMatrix;
-        glm::mat4 view;
         view = camera.getViewMatrix();
-        shader.setMatrix4("u_view", view);
 
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(camera.fov), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
-        shader.setMatrix4("u_proj", projection);
+        shader.use();
+        shader.setInt("u_texture", 0);
+        shader.setInt("u_normalMap", 1);
+        shader.setVec3("lightPosition", lightPosition);
+        shader.setVec3("viewPos", camera.position);
+        shader.setMatrix4("view", view);
+        shader.setMatrix4("proj", projection);
 
-        modelMatrix = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, -2.0f));
+        shader.setMatrix4("model", model);
 
-        shader.setMatrix4("u_model", modelMatrix);
-
-        model.draw(shader);
-
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
+        cyborg.draw(shader);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -166,6 +165,16 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
         camera.move(core::CameraMovement::RIGHT, deltaTime);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !KEY_B_PRESSED)
+    {
+        KEY_B_PRESSED = true;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE)
+    {
+        KEY_B_PRESSED = false;
     }
 }
 
