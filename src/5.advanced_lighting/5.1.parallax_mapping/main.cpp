@@ -43,12 +43,12 @@ unsigned int createWallVBO()
         glm::vec3(1.0f, -1.0f, 0.0f)};
 
     glm::vec2 uvs[] = {
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
         glm::vec2(0.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
-        glm::vec2(1.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
-        glm::vec2(1.0f, 1.0f)};
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f)};
 
     glm::vec3 normal(0.0f, 0.0f, 1.0f);
 
@@ -181,7 +181,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    stbi_set_flip_vertically_on_load(1);
+    // stbi_set_flip_vertically_on_load(1);
     unsigned int brickTexture = loadTexture("../../../resources/textures/bricks2.jpg");
     unsigned int brickNormalMap = loadTexture("../../../resources/textures/bricks2_normal.jpg");
     unsigned int brickDispMap = loadTexture("../../../resources/textures/bricks2_disp.jpg");
