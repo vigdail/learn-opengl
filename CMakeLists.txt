@@ -134,7 +134,7 @@ set(5.advanced_lighting
     4.1.normal_mapping
     4.2.complex_models_normal_mapping
     5.1.parallax_mapping
-    # 5.2.steep_parallax_mapping
+    5.2.steep_parallax_mapping
     # 5.3.parallax_occlusion_mapping
     # 6.hdr
     # 7.bloom

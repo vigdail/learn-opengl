@@ -31,7 +31,6 @@ float mouseLastY = WIN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 bool KEY_B_PRESSED = false;
-bool useNormalMap = true;
 
 unsigned int createWallVBO()
 {
@@ -182,8 +181,10 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    unsigned int brickTexture = loadTexture("../../../resources/textures/brickwall.jpg");
-    unsigned int brickNormalMap = loadTexture("../../../resources/textures/brickwall_normal.jpg");
+    // stbi_set_flip_vertically_on_load(1);
+    unsigned int texture = loadTexture("../../../resources/textures/wood.png");
+    unsigned int normalMap = loadTexture("../../../resources/textures/toy_box_normal.png");
+    unsigned int dispMap = loadTexture("../../../resources/textures/toy_box_disp.png");
 
     Shader shader("blinn_phong.vs", "blinn_phong.fs");
     unsigned int wallVBO = createWallVBO();
@@ -193,7 +194,7 @@ int main()
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(camera.fov), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
-    state.lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    state.lightPosition = glm::vec3(1.0f, 0.0f, 1.0f);
 
     // render loop
     // -----------
@@ -218,14 +219,18 @@ int main()
         shader.use();
         shader.setInt("u_texture", 0);
         shader.setInt("u_normalMap", 1);
+        shader.setInt("u_dispMap", 2);
         shader.setVec3("lightPosition", state.lightPosition);
         shader.setVec3("viewPos", camera.position);
         shader.setMatrix4("view", view);
         shader.setMatrix4("proj", projection);
+        shader.setFloat("heightScale", 0.1f);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, brickTexture);
+        glBindTexture(GL_TEXTURE_2D, texture);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, brickNormalMap);
+        glBindTexture(GL_TEXTURE_2D, normalMap);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, dispMap);
 
         drawScene(shader);
 
@@ -246,9 +251,7 @@ void drawScene(Shader shader)
     // wall
     glm::mat4 model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 1.0f));
     shader.setMatrix4("model", model);
-    shader.setBool("useNormalMap", useNormalMap);
 
     glBindVertexArray(state.wallVAO);
 
@@ -284,7 +287,6 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !KEY_B_PRESSED)
     {
         KEY_B_PRESSED = true;
-        useNormalMap = !useNormalMap;
     }
 
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE)
