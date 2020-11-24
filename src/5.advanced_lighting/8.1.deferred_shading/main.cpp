@@ -217,6 +217,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
 
     unsigned int quadVAO = createVAO(createQuadVBO());
     unsigned int cubeVAO = createVAO(createCubeVBO());
