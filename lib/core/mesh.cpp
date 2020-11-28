@@ -17,7 +17,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 }
 
-void Mesh::draw(Shader &shader)
+void Mesh::draw(Shader &shader, GLenum mode)
 {
     unsigned int diffuseN = 1;
     unsigned int specularN = 1;
@@ -50,7 +50,7 @@ void Mesh::draw(Shader &shader)
 
     // draw
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 

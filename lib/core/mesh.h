@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include "shader.h"
@@ -30,7 +31,7 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void draw(Shader &shader);
+    void draw(Shader &shader, GLenum mode = GL_TRIANGLES);
     unsigned int VBO, VAO, EBO;
 
 private:
