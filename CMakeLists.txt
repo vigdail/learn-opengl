@@ -39,7 +39,7 @@ set(CHAPTERS
     4.advanced_opengl
     5.advanced_lighting
     6.pbr
-    # 7.in_practice
+    7.in_practice
 )
 
 set(1.getting_started
@@ -154,7 +154,7 @@ set(6.pbr
 
 set(7.in_practice
     1.debugging
-    2.text_rendering
+    # 2.text_rendering
     #3.2d_game
 )
 
