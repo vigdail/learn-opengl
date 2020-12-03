@@ -26,11 +26,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 find_package(OpenGL REQUIRED)
 add_definitions(${OPENGL_DEFINITIONS})
 find_package(X11 REQUIRED)
+find_package(Freetype REQUIRED)
 # note that the order is important for setting the libs
 # use pkg-config --libs $(pkg-config --print-requires --print-requires-private glfw3) in a terminal to confirm
 set(LIBS glfw ${GLFW3_LIBRARY} X11 Xrandr Xinerama Xi Xxf86vm Xcursor GL dl pthread freetype ${ASSIMP_LIB})
 set (CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
-
 
 set(CHAPTERS
     1.getting_started
@@ -154,7 +154,7 @@ set(6.pbr
 
 set(7.in_practice
     1.debugging
-    # 2.text_rendering
+    2.text_rendering
     #3.2d_game
 )
 
@@ -177,7 +177,7 @@ endmacro()
 # core lib
 file(GLOB CORE_SRC "lib/core/*.cpp")
 add_library(core ${CORE_SRC})
-target_include_directories(core PRIVATE "lib/include/")
+target_include_directories(core PRIVATE "lib/include/") 
 target_link_libraries(core ${LIBS})
 
 # then create a project file per tutorial
@@ -192,7 +192,7 @@ foreach(CHAPTER ${CHAPTERS})
         )
         set(NAME "${CHAPTER}__${DEMO}")
         add_executable(${NAME} ${SOURCE})
-        target_include_directories(${NAME} PRIVATE "lib/include/" PRIVATE "lib/")
+        target_include_directories(${NAME} PRIVATE "lib/include/" PRIVATE "lib/" PRIVATE ${FREETYPE_INCLUDE_DIRS})
         target_link_libraries(${NAME} core ${LIBS})
  
         set_target_properties(${NAME} PROPERTIES 
